@@ -44,6 +44,7 @@ module.exports = {
     "react/static-property-placement": ["error", "property assignment", {
       defaultProps: "static public field",
       propTypes: "static public field"
-    }]
+    }],
+    'react/state-in-constructor': 0
   },
 };
