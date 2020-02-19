@@ -3,6 +3,14 @@ import { initReactI18next } from 'react-i18next';
 import * as RNLocalize from 'react-native-localize';
 import underscore from 'lodash';
 
+import vi from '~/i18n/vi.json';
+import en from '~/i18n/en.json';
+
+const resources = {
+  vi,
+  en
+};
+
 const languageDetector = {
   type: 'languageDetector',
   async: true, // flags below detection to be async
@@ -25,18 +33,7 @@ i18n
   .init({
     fallbackLng: 'vi',
     debug: true,
-    resources: {
-      en: {
-        common: {
-          home: 'Home',
-        },
-      },
-      vi: {
-        common: {
-          home: 'Trang chủ',
-        },
-      },
-    },
+    resources,
 
     // have a common namespace used around the full app
     ns: ['common'],

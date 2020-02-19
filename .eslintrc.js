@@ -41,9 +41,14 @@ module.exports = {
     'object-curly-newline': 0,
     'import/no-cycle': 0,
     'react/jsx-props-no-spreading': 0,
-    "react/static-property-placement": ["error", "property assignment", {
-      defaultProps: "static public field",
-      propTypes: "static public field"
-    }]
+    'react/static-property-placement': [
+      'error',
+      'property assignment',
+      {
+        defaultProps: 'static public field',
+        propTypes: 'static public field',
+      },
+    ],
+    'react/state-in-constructor': 0,
   },
 };
