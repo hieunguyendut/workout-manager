@@ -9,7 +9,11 @@ import {
 import { withTranslation } from 'react-i18next';
 import { List, ListItem } from 'native-base';
 import styled from 'styled-components/native';
+import { connect } from 'react-redux';
+import { compose, bindActionCreators } from 'redux';
+import PropTypes from 'prop-types';
 
+import { addTaskAction } from '~/actions/taskAction';
 import styles from './styles';
 
 const ListItemHeader = styled(ListItem)`
@@ -49,6 +53,11 @@ const BreakTime = styled(View)`
 `;
 
 class Home extends React.Component {
+  static propTypes = {
+    aAddTaskAction: PropTypes.func.isRequired,
+    rTask: PropTypes.array.isRequired,
+  };
+
   state = {
     exerciseNameValue: '',
     exerciseTimeValue: '',
@@ -105,6 +114,7 @@ class Home extends React.Component {
       breakTimeValue,
     } = this.state;
 
+    const { aAddTaskAction, rTask } = this.props;
     return (
       <SafeAreaView style={{ flex: 1 }}>
         <View style={{ paddingHorizontal: 15 }}>
@@ -183,6 +193,13 @@ class Home extends React.Component {
                 <Text style={styles.btn_title}>Thêm</Text>
               </TouchableOpacity>
             </View>
+
+            <TouchableOpacity
+              onPress={() => aAddTaskAction({ id: '1', name: 'something' })}
+            >
+              <Text>Increase By 1</Text>
+            </TouchableOpacity>
+            <Text>{`counter: ${rTask}`}</Text>
           </View>
         </View>
       </SafeAreaView>
@@ -190,4 +207,17 @@ class Home extends React.Component {
   }
 }
 
-export default withTranslation(['common'])(Home);
+export default compose(
+  connect(
+    state => ({
+      rTask: state.taskReducer.task,
+    }),
+    dispatch => bindActionCreators(
+      {
+        aAddTaskAction: addTaskAction,
+      },
+      dispatch,
+    ),
+  ),
+  withTranslation(['common']),
+)(Home);
