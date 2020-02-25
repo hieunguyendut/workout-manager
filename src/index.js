@@ -8,7 +8,7 @@ import App from './App';
 const { store, persistor } = configureStore();
 
 export default () => (
-  <Provider store={store}>
+  <Provider store={store} loading>
     <PersistGate persistor={persistor}>
       <App />
     </PersistGate>

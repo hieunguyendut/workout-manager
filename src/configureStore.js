@@ -1,6 +1,10 @@
 // import { createReactNavigationReduxMiddleware } from 'react-navigation-redux-helpers';
 import { createStore, applyMiddleware } from 'redux';
-import { persistStore, persistCombineReducers } from 'redux-persist';
+import {
+  persistStore,
+  persistCombineReducers,
+  persistReducer,
+} from 'redux-persist';
 import AsyncStorage from '@react-native-community/async-storage';
 import thunk from 'redux-thunk';
 import { composeWithDevTools } from 'redux-devtools-extension';
@@ -32,8 +36,11 @@ export default function configureStore(initialState) {
   const persistor = persistStore(store);
 
   if (module.hot) {
-    module.hot.accept(() => {
-      store.replaceReducer(require('./reducers').default);
+    module.hot.accept('./reducers', () => {
+      const nextRootReducer = require('./reducers').default;
+      store.replaceReducer(
+        persistReducer(rootPersistConfig, nextRootReducer),
+      );
     });
   }
 

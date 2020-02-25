@@ -12,6 +12,7 @@ import styled from 'styled-components/native';
 import { connect } from 'react-redux';
 import { compose, bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
+import _ from 'lodash';
 
 import { addTaskAction } from '~/actions/taskAction';
 import styles from './styles';
@@ -55,21 +56,13 @@ const BreakTime = styled(View)`
 class Home extends React.Component {
   static propTypes = {
     aAddTaskAction: PropTypes.func.isRequired,
-    rTask: PropTypes.array.isRequired,
+    rTask: PropTypes.object.isRequired,
   };
 
   state = {
     exerciseNameValue: '',
     exerciseTimeValue: '',
     breakTimeValue: '',
-    listExercise: [
-      {
-        id: 0,
-        exerciseNameValue: 'Tap nhay xa that la xa hahahahah, balata',
-        exerciseTimeValue: '30s',
-        breakTimeValue: '10s',
-      },
-    ],
   };
 
   onChangeText = (name, value) => {
@@ -88,13 +81,16 @@ class Home extends React.Component {
 
   handleAddMore = () => {
     const {
-      listExercise,
       exerciseNameValue,
       exerciseTimeValue,
       breakTimeValue,
     } = this.state;
 
-    const idOfNewItem = listExercise.length;
+    const { aAddTaskAction, rTask } = this.props;
+
+    const tasks = _.get(rTask, 'task', []);
+
+    const idOfNewItem = tasks.length;
     const newItem = {
       id: idOfNewItem,
       exerciseNameValue,
@@ -102,19 +98,20 @@ class Home extends React.Component {
       breakTimeValue,
     };
 
-    listExercise.push(newItem);
+    aAddTaskAction(newItem);
     this.resetForm();
   };
 
   render() {
     const {
-      listExercise,
       exerciseNameValue,
       exerciseTimeValue,
       breakTimeValue,
     } = this.state;
 
-    const { aAddTaskAction, rTask } = this.props;
+    const { rTask } = this.props;
+    const tasks = _.get(rTask, 'task', []);
+
     return (
       <SafeAreaView style={{ flex: 1 }}>
         <View style={{ paddingHorizontal: 15 }}>
@@ -135,7 +132,7 @@ class Home extends React.Component {
                   <Text>Rest Time</Text>
                 </BreakTime>
               </ListItemHeader>
-              {listExercise.map((exerciseObj, i) => (
+              {tasks.map((exerciseObj, i) => (
                 <ListItemStyled key={exerciseObj.id}>
                   <Index>
                     <Text>{i}</Text>
@@ -193,13 +190,6 @@ class Home extends React.Component {
                 <Text style={styles.btn_title}>Thêm</Text>
               </TouchableOpacity>
             </View>
-
-            <TouchableOpacity
-              onPress={() => aAddTaskAction({ id: '1', name: 'something' })}
-            >
-              <Text>Increase By 1</Text>
-            </TouchableOpacity>
-            <Text>{`counter: ${rTask}`}</Text>
           </View>
         </View>
       </SafeAreaView>
@@ -210,7 +200,7 @@ class Home extends React.Component {
 export default compose(
   connect(
     state => ({
-      rTask: state.taskReducer.task,
+      rTask: state.taskReducer,
     }),
     dispatch => bindActionCreators(
       {
